@@ -1,0 +1,13 @@
+---
+description: Security rules for the sample todo app
+alwaysApply: true
+---
+
+Security rules that must hold for any AI-generated change in this repo:
+
+- Never write, log, echo, or hardcode secrets, API keys, or production credentials. Do not read or print `.env`, `config/master.key`, `config/credentials.yml.enc`, or `.kamal/secrets`.
+- Never call `eval`, `instance_eval`, `send`, or `constantize` on user input.
+- Never pass untrusted input to `html_safe` or `raw`. Let ERB auto-escaping handle output.
+- Use parameterized / hash-condition queries (e.g. `where("description = ?", value)` or `where(description: value)`). Never string-interpolate user input into SQL.
+- Do not disable CSRF protection (no `skip_before_action :verify_authenticity_token`), mass-assignment protection (keep strong params), or any session/authentication checks.
+- Keep using strong parameters (`params.expect`) for every model write; never call `permit!` or assign raw `params` to a model.
