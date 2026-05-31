@@ -1,0 +1,31 @@
+# --- Required minimum (secrets & noise) ---
+.env
+.env.*
+config/master.key
+config/credentials/*.key
+tmp/
+log/
+storage/
+node_modules/
+
+# --- Repo-specific additions (investigated for this Rails 8 app) ---
+# Kamal deployment secrets file (present in this repo)
+.kamal/secrets
+
+# Rails encrypted credentials (decryptable with master.key; keep out of AI context)
+config/credentials.yml.enc
+
+# Any stray key/cert material
+*.key
+*.pem
+
+# Local SQLite databases (may contain real/seeded data)
+*.sqlite3
+*.sqlite3-*
+
+# Bundler config and compiled assets
+.bundle/
+public/assets/
+
+# Test coverage reports
+coverage/

@@ -4,4 +4,7 @@
     <%= todo.description %>
   </p>
 
+  <%= button_to toggle_priority_todo_path(todo), method: :patch do %>
+    <%= todo.high_priority ? "★" : "☆" %>
+  <% end %>
 </div>

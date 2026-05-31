@@ -1,0 +1,15 @@
+---
+description: Rails 8 conventions for the sample todo app
+alwaysApply: true
+---
+
+Conventions that must hold for any AI-generated change in this repo:
+
+- Prefer Hotwire/Turbo (Turbo Streams, Turbo Frames) and Stimulus over hand-written JavaScript. No inline `<script>` in ERB.
+- Use `bin/rails generate` for migrations, models, and controllers rather than hand-writing boilerplate.
+- Keep all migrations reversible (`change` with reversible operations, or explicit `up`/`down`).
+- Use strong parameters via the Rails 8 `params.expect(...)` style, matching the existing `TodosController`.
+- Controllers respond through `respond_to` blocks; render JSON via jbuilder views (`*.json.jbuilder`), not inline `render json:` of view data.
+- Tests are Minitest under `test/` — add or extend tests there. Do not introduce RSpec.
+- Keep the schema scoped to this todo app. Do not import models, migrations, or tables from other projects.
+- Do not add new gems or CSS frameworks (e.g. Bootstrap) without explicit approval; styling stays plain CSS under `app/assets/stylesheets/`.
