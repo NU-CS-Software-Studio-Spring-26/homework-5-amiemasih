@@ -117,14 +117,57 @@ fix the bug in todos
 ## Part 4 — Ship a small feature end-to-end
 
 ### Turbo Streams explanation (my own words)
+Basically a Turbo Stream is a response from the server that only updates the specific
+bits of the page you tell it to, instead of reloading the whole thing. It's part of
+Hotwire and comes from the turbo-rails gem (already in our Gemfile). A normal HTML
+response swaps out the entire page, but a Turbo Stream just carries a list of little DOM
+operations like "replace this element" or "remove that one" and Turbo runs them in place,
+with no custom JavaScript needed.
+
+The way you tell them apart is the MIME type. Normal HTML is text/html, but a Turbo
+Stream response is text/vnd.turbo-stream.html. In the controller you add a
+format.turbo_stream branch inside the respond_to block, and Rails automatically renders
+the matching view file named <action>.turbo_stream.erb (e.g.
+app/views/todos/toggle_priority.turbo_stream.erb). Inside that file you use helpers like
+turbo_stream.replace or turbo_stream.update that target an element by its DOM id.
+
+There are seven stream actions: append and prepend (add to the end or start of a list),
+replace (swap the whole element including its tag), update (swap only what's inside the
+element), remove (delete it), and before and after (insert as a sibling). For my feature
+I'll use replace or update to flip just the one todo row when the priority toggle is
+clicked.
+
+I checked our app and there are currently zero Turbo Streams in it. The TodosController
+only does format.html and format.json, so I'm adding the first one.
 
 
 ### One thing I verified against the Turbo Streams handbook / Rails source
-
+I double-checked the seven stream actions and the MIME type against the Turbo Streams
+handbook (turbo.hotwired.dev/handbook/streams). It confirmed the type is exactly
+text/vnd.turbo-stream.html and that replace swaps the whole target element while update
+only changes its inner content, which is the distinction I'd most likely have gotten
+wrong, so good to confirm.
 
 ### Self-check answers
-- MIME type:
-- Where the matching view file goes for `toggle_priority` on `TodosController`:
+- MIME type: text/vnd.turbo-stream.html
+- Where the matching view file goes for `toggle_priority` on `TodosController`: 
+app/views/todos/toggle_priority.turbo_stream.erb
+
+## Story
+As a person managing my todo list, I want to flag a todo as high priority with one
+click, so that I can quickly spot what's urgent without the page reloading and losing
+my place on the list.
+
+### Acceptance criteria
+- Todo gets a high_priority boolean attribute.
+- Every row on the todos index shows a visible toggle (star icon) reflecting the
+  current priority state for that todo.
+- Clicking the toggle flips the priority and returns a Turbo Stream that updates only
+  that row/button. The rest of the page does not re-render.
+- Verified in DevTools Network tab: response Content-Type is text/vnd.turbo-stream.html
+  and the request Accept header includes the same MIME type.
+- At least one automated test covers the toggle.
+
 
 ### Pull Request
 - PR URL: <link>
